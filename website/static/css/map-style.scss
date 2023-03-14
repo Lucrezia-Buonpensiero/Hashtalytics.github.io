@@ -1,0 +1,47 @@
+$color: #D8E1FF;
+
+.tweet-marker {
+    &.selected-marker {
+        background-image: url('../icons/mapbox-icon-selected.png');
+        $side: 50px;
+        width: $side;
+        height: $side;
+    }
+
+    &:not(.selected-marker) {
+        background-image: url('../icons/mapbox-icon.png');
+        $side: 30px;
+        width: $side;
+        height: $side;
+    }
+
+
+    background-size: cover;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#map-search-btn {
+    border: $color solid 2px;
+    font-size: 18px;
+}
+
+#map-results {
+    padding: 2vh;
+
+    & > .row:not(.alert) {
+
+        &.selected-row {
+            background: #9bff87;
+        }
+
+        &:not(.selected-row) {
+            background: $color;
+        }
+
+        border-radius: 2px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding: 10px;
+    }
+}

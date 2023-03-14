@@ -1,0 +1,15 @@
+#main-home-div {
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+
+    & #input-form {
+        width: 100vh;
+        padding-top: 2vh;
+    }
+}
+
+#chartdiv {
+  width: 100%;
+  height: 400px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}

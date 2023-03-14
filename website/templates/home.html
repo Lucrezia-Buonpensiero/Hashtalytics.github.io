@@ -1,0 +1,109 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+{% crispy example_form example_form.helper %}
+
+{% block content %}
+    <div class="container">
+        <div id="page-header" class="row">
+            <!--style="background-image: url('/static/media/Sfondo_4.jpg'); background-attachment:fixed; background-size: cover; background-size: 100% 100%;"-->
+            <div class="col">
+                <h1>HASHTALYTICS</h1>
+                <p>
+                    {% trans 'Interfaccia web per l’analisi dei tweet raccolti per rilevare gli hashtag in tendenza.' %}
+                </p>
+                <div>
+                    {% if user.is_authenticated %}
+                        <!--barra di ricerca-->
+                        <div class="input-group rounded">
+                            <form id="input-form" method="GET" action="{% url 'query-results' %}"
+                                  class="form-inline d-flex justify-content-start">
+                                {% crispy form %}
+                            </form>
+                        </div>
+                    {% else %}
+                        <div class="input-group rounded">
+                            <div class="col">
+                                <a type="button" class="btn btn-primary" href="{% url 'login' %}">
+                                    {% trans 'Accedi per analizzare hashtag, username e luoghi' %}
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col">
+                <img src="https://image.freepik.com/free-vector/group-analysts-working-graphs_1262-21249.jpg" alt="generic-corporate-bigdata-clipart">
+            </div>
+        </div>
+
+        <hr>
+
+        <div id="main-home-div" class="row d-flex justify-content-around align-items-top">
+            <!--style="background-image: url('/static/media/Sfondo_ricerca.png'); background-attachment:fixed; background-size: cover;"-->
+            <div class="col-6">
+                <!--TermCloud-->
+                <div id="chartdiv" class="row justify-content-center">
+                </div>
+                {{ trends_cloud|json_script:"trends-data" }}
+                <!--End TermCloud-->
+            </div>
+
+            {% if user.is_authenticated %}
+                <div class="col-3">
+                    <div class="list-group-item active d-flex justify-content-around"
+                         style="border-radius: 15px 15px 0 0;">
+                        <h3>{% trans "I TUOI TREND" %}</h3>
+                        <a class="btn btn-primary" href="{% url 'profile' %}">+</a>
+                    </div>
+
+                    <ul class="list-group" style="border-radius: 0 0 15px 15px;">
+                        {% if user_trends|length > 0 %}
+                            {% for u_trend in user_trends %}
+                                <li class="list-group-item">
+                                    {{ forloop.counter }} <a style="color: black" href="{{ u_trend.url }}">{{ u_trend.name }}</a>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item" style="text-align: center; font-size: large; color:gray;">
+                                {% trans "Nessuna keyword personale in tendenza..." %}
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="col-3">
+                <div class="list-group-item active d-flex justify-content-around"
+                     style="border-radius: 15px 15px 0 0;">
+                    <h3>TOP TRENDS</h3>
+                    {% if user.is_authenticated %}
+                        <a class="btn btn-primary" href="{% url 'trends' %}">{% trans 'Sfoglia...' %}</a>
+                    {% endif %}
+                </div>
+
+                <ul class="list-group" style="border-radius: 0px 0px 15px 15px;">
+                    {% for trend in trends %}
+                        <li class="list-group-item">
+                            {{ forloop.counter }}
+                            <a style="color: black" href="{{ trend.url }}">{{ trend.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <hr>
+    </div>
+{% endblock %}
+
+{% block extra-scripts %}
+    <!-- Resources -->
+    <script src="//cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="//cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="//cdn.amcharts.com/lib/4/plugins/wordCloud.js"></script>
+    <script src="//cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+    <!-- Chart code -->
+    <script src="{% static "js/home-chart.js" %}"></script>
+{% endblock %}
